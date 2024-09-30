@@ -1,0 +1,73 @@
+from ucimlrepo import fetch_ucirepo
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
+
+# Fetch dataset
+taiwanese_bankruptcy = fetch_ucirepo(id=572)
+
+# Data (as pandas dataframes)
+X = taiwanese_bankruptcy.data.features
+y = taiwanese_bankruptcy.data.targets
+
+# Metadata
+print(taiwanese_bankruptcy.metadata)
+
+# Variable information
+print(taiwanese_bankruptcy.variables)
+
+# Load data
+# X contains the features, y contains the target labels
+X = taiwanese_bankruptcy.data.features
+y = taiwanese_bankruptcy.data.targets
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=3)
+
+# Fix the shape of y by converting to NumPy arrays and use ravel() to flatten the target array
+y_train = y_train.to_numpy().ravel()
+y_test = y_test.to_numpy().ravel()
+
+# Create a StandardScaler model and fit it to the training data
+x_scaler = StandardScaler().fit(X_train)
+
+# Transform the training and testing data by using the X_scaler model
+X_train_scaled = x_scaler.transform(X_train)
+X_test_scaled = x_scaler.transform(X_test)
+
+# K-nearest neighbors
+# Loop through different k values to find which has the highest accuracy
+# Note: We use only odd numbers because we don’t want any ties.
+train_scores = []
+test_scores = []
+
+for k in range(1, 20, 2):
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train_scaled, y_train)
+    
+    train_score = knn.score(X_train_scaled, y_train)
+    test_score = knn.score(X_test_scaled, y_test)
+    
+    train_scores.append(train_score)
+    test_scores.append(test_score)
+    
+    print(f"k: {k}, Train/Test Score: {train_score:.3f}/{test_score:.3f}")
+
+# Plot results
+plt.plot(range(1, 20, 2), train_scores, marker='o', label="training scores")
+plt.plot(range(1, 20, 2), test_scores, marker='x', label="testing scores")
+plt.xlabel("k neighbors")
+plt.ylabel("accuracy score")
+plt.legend()
+plt.show()
+
+# Train the KNN model with best k value
+# Note that k=9 seems to be the best choice for this dataset
+knn = KNeighborsClassifier(n_neighbors=9)
+knn.fit(X_train_scaled, y_train)
+
+# Print the score for the test data
+print(f"k=9 Test Acc: {knn.score(X_test_scaled, y_test):.3f}")
+
