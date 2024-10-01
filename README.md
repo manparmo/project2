@@ -1,4 +1,4 @@
-# Taiwanese Company Bankruptcy Prediction
+#  Company Bankruptcy Prediction
 
 ## Project Overview
 
