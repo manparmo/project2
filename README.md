@@ -34,11 +34,11 @@ The dataset includes several financial indicators such as:
 
 ## Logistic Regression Analysis
 
-### Model Overview
+### Models Overview
 - **Logistic Regression** was used as a baseline model to predict bankruptcy.
 - It is a linear model used for binary classification, suitable for initial exploration due to its interpretability.
 
-### Results:
+#### Results:
 1. **Accuracy**: The model achieved an accuracy score of approximately **0.7463**, indicating that the model correctly classified around 74.63% of the companies.
   
 2. **Classification Report**:
@@ -54,8 +54,28 @@ The dataset includes several financial indicators such as:
 - The confusion matrix shows that the model predicted **1001 true negatives** (correctly classified non-bankrupt companies) and **27 true positives** (correctly classified bankrupt companies).
 - However, there are **319 false positives** (companies predicted as bankrupt but are not) and **17 false negatives** (companies that went bankrupt but were not predicted to).
 
-### Interpretation and Challenges:
+#### Interpretation and Challenges:
 - **Class Imbalance**: The dataset is highly imbalanced, with far fewer bankrupt companies than non-bankrupt ones. This impacts the model's ability to correctly predict the minority class (bankrupt).
+
+### Models Overview
+**Decistion Tree**
+This model was used to analyze and predict the binary data results.
+
+#### Results:
+1. **Accuracy**: The model achieved an accuracy score of approximately **0.9501**, indicating that the model correctly classified around 95.01% of the companies.
+2. **Classification Report**:
+- Precision:
+For class 0: Precision = 0.98 (98% of predictions for class 0 were correct).
+For class 1: Precision = 0.33 (Only 33% of predictions for class 1 were correct).
+- Recall:
+For class 0: Recall = 0.97 (97% of actual class 0 instances were correctly predicted).
+For class 1: Recall = 0.38 (Only 38% of actual class 1 instances were correctly predicted).
+- F1-Score:
+For class 0: F1-score = 0.98.
+For class 1: F1-score = 0.35.
+- Insights:
+The model performs very well on class 0 but struggles with class 1, which has lower precision, recall, and F1-score. This could indicate a class imbalance problem, where the model is biased toward the majority class (0).
+
 
 1. **Dependencies**: 
 - Python 3.x
