@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from sklearn.metrics import classification_report, confusion_matrix, balanced_accuracy_score, accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix, balanced_accuracy_score, accuracy_score, roc_auc_score
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.pipeline import Pipeline
@@ -19,12 +19,16 @@ def check_metrics(X_test, y_test, model):
 
     # Evaluation metrics
     accuracy = accuracy_score(y_test, y_pred)
-    print(f"Balanced accuracy of the model: {accuracy:.4f}")
+    baccuracy = balanced_accuracy_score(y_test, y_pred)
+    roc_auc = roc_auc_score(y_test, model.predict_proba(X_test)[:, 1])
+    print(f"\Accuracy of the model: {accuracy:.4f}")
+    print(f"Balanced accuracy of the model: {baccuracy:.4f}")
+    print(f"ROC-AUC of the model: {roc_auc:.4f}")
 
-    print("Classification Report:")
+    print("\nClassification Report:")
     print(classification_report(y_test, y_pred))
 
-    print("Confusion Matrix:")
+    print("\nConfusion Matrix:")
     print(confusion_matrix(y_test, y_pred))
 
     return accuracy
