@@ -30,32 +30,48 @@ The dataset includes several financial indicators such as:
     - **Net Income to Total Assets** and **ROA** variants show negative correlations, indicating that higher profitability reduces bankruptcy risk.
 
 2. **Modeling Recommendation**:
-    - Due to the weak correlation of individual features, complex models like **Random Forest**, **Gradient Boosting**, are recommended. 
-
-## Logistic Regression Analysis
-
-### Models Overview
-- **Logistic Regression** was used as a baseline model to predict bankruptcy.
-- It is a linear model used for binary classification, suitable for initial exploration due to its interpretability.
-
-#### Results:
-1. **Accuracy**: The model achieved an accuracy score of approximately **0.7463**, indicating that the model correctly classified around 74.63% of the companies.
+    - Due to the weak correlation of individual features, complex models like **Random Forest** were used.
   
-2. **Classification Report**:
-   - **Precision**: 
-     - Class `0` (Non-bankrupt): **0.97** - indicating that the model is highly accurate when predicting companies that are not bankrupt.
-     - Class `1` (Bankrupt): **0.05** - indicating that the model struggles to accurately predict bankruptcy cases due to class imbalance.
-   - **Recall**: 
-     - Class `0`: **0.76** - the model correctly identifies 76% of non-bankrupt companies.
-     - Class `1`: **0.39** - the model only identifies 39% of the bankrupt companies, showing a challenge in detecting bankruptcy.
-   - **F1-score**: The F1-score for class `1` is **0.09**, indicating a weak performance in predicting bankruptcy cases.
+      ### Key Features in the Filtered Dataset:
+1. Net Income to Stockholder's Equity
+2. Debt Ratio %
+3. Current Liability to Assets
+4. Borrowing Dependency
+5. Retained Earnings to Total Assets
+6. Total Asset Turnover
+7. Operating Gross Margin
+8. Net Income to Total Assets
+9. Cash Flow to Total Assets
+10. Interest Coverage Ratio (Interest expense to EBIT)
 
-3. **Confusion Matrix**:
-- The confusion matrix shows that the model predicted **1001 true negatives** (correctly classified non-bankrupt companies) and **27 true positives** (correctly classified bankrupt companies).
-- However, there are **319 false positives** (companies predicted as bankrupt but are not) and **17 false negatives** (companies that went bankrupt but were not predicted to).
+## Data Preprocessing
+Since the dataset was highly imbalanced, with far fewer bankrupt companies compared to non-bankrupt ones, we applied several techniques:
+- **Oversampling** to balance the classes.
+- **Undersampling** to reduce the majority class.
+- **Feature Selection** to focus on the most relevant features.
 
-#### Interpretation and Challenges:
-- **Class Imbalance**: The dataset is highly imbalanced, with far fewer bankrupt companies than non-bankrupt ones. This impacts the model's ability to correctly predict the minority class (bankrupt).
+## Models Implemented
+We implemented the following models:
+- **K-Nearest Neighbors (KNN)**
+- **Logistic Regression**
+- **Random Forest**
+- **Decision Tree**
+
+Each model was trained and evaluated on both the full dataset and the filtered dataset.
+
+## Model Performance
+
+| Model                | Data Treatment | Accuracy | Balanced Accuracy | ROC-AUC | Precision (Class 0) | Recall (Class 0) | F1-score (Class 0) | Precision (Class 1) | Recall (Class 1) | F1-score (Class 1) |
+|----------------------|----------------|----------|-------------------|---------|---------------------|------------------|--------------------|---------------------|------------------|--------------------|
+| **KNN**              | As Is          | 0.9677   | 0.5000            | 0.6362  | 0.97                | 1.00             | 0.98               | 0.00                | 0.00             | 0.00               |
+| **KNN**              | Filtered       | 0.9660   | 0.5606            | 0.8466  | 0.97                | 0.99             | 0.98               | 0.41                | 0.13             | 0.19               |
+| **Logistic Regression** | As Is       | 0.9566   | 0.4942            | 0.5848  | 0.97                | 0.99             | 0.98               | 0.00                | 0.00             | 0.00               |
+| **Logistic Regression** | Filtered    | 0.9683   | 0.5179            | 0.9332  | 0.97                | 1.00             | 0.98               | 0.67                | 0.04             | 0.07               |
+| **Random Forest**     | As Is          | 0.9689   | 0.5709            | 0.9255  | 0.97                | 1.00             | 0.98               | 0.57                | 0.15             | 0.23               |
+| **Random Forest**     | Filtered       | 0.9695   | 0.5888            | 0.9008  | 0.97                | 1.00             | 0.98               | 0.59                | 0.18             | 0.28               |
+| **Decision Tree**     | As Is          | 0.9584   | 0.6533            | 0.6533  | 0.98                | 0.98             | 0.98               | 0.35                | 0.33             | 0.34               |
+| **Decision Tree**     | Filtered       | 0.9537   | 0.6333            | 0.6333  | 0.98                | 0.98             | 0.98               | 0.29                | 0.29             | 0.29               |
+
 
 ### Models Overview
 **Decistion Tree**
@@ -76,6 +92,47 @@ For class 1: F1-score = 0.35.
 - Insights:
 The model performs very well on class 0 but struggles with class 1, which has lower precision, recall, and F1-score. This could indicate a class imbalance problem, where the model is biased toward the majority class (0).
 
+## Summary of Model Performance for Filtered Dataset
+
+| Model              | Data Treatment | Accuracy | Balanced Accuracy | ROC-AUC | Precision Class 0 | Recall Class 0 | F1-score Class 0 | Precision Class 1 | Recall Class 1 | F1-score Class 1 |
+|--------------------|----------------|----------|-------------------|---------|-------------------|----------------|------------------|-------------------|----------------|------------------|
+| **KNN**            | As Is          | 0.9660   | 0.5606            | 0.8466  | 0.97              | 0.99           | 0.98             | 0.41              | 0.13           | 0.19             |
+| **KNN**            | Undersampled   | 0.8381   | 0.8461            | 0.9106  | 0.99              | 0.84           | 0.91             | 0.15              | 0.85           | 0.25             |
+| **KNN**            | Oversampled    | 0.9097   | 0.7864            | 0.8402  | 0.99              | 0.92           | 0.95             | 0.21              | 0.65           | 0.32             |
+| **Logistic Regression** | As Is     | 0.9683   | 0.5179            | 0.9332  | 0.97              | 1.00           | 0.98             | 0.67              | 0.04           | 0.07             |
+| **Logistic Regression** | Undersampled | 0.8575 | 0.8473            | 0.9296  | 0.99              | 0.86           | 0.92             | 0.16              | 0.84           | 0.27             |
+| **Logistic Regression** | Oversampled | 0.8592 | 0.8482            | 0.9333  | 0.99              | 0.86           | 0.92             | 0.17              | 0.84           | 0.28             |
+| **Random Forest**   | As Is          | 0.9695   | 0.5888            | 0.9008  | 0.97              | 1.00           | 0.98             | 0.59              | 0.18           | 0.28             |
+| **Random Forest**   | Undersampled   | 0.8545   | 0.8282            | 0.9183  | 0.99              | 0.86           | 0.92             | 0.16              | 0.80           | 0.26             |
+| **Random Forest**   | Oversampled    | 0.9689   | 0.6324            | 0.8979  | 0.98              | 0.99           | 0.98             | 0.54              | 0.27           | 0.36             |
+| **Decision Tree**   | As Is          | 0.9537   | 0.6333            | 0.6333  | 0.98              | 0.98           | 0.98             | 0.29              | 0.29           | 0.29             |
+| **Decision Tree**   | Undersampled   | 0.7871   | 0.7933            | 0.7933  | 0.99              | 0.79           | 0.88             | 0.11              | 0.80           | 0.20             |
+| **Decision Tree**   | Oversampled    | 0.9554   | 0.6079            | 0.6079  | 0.97              | 0.98           | 0.98             | 0.28              | 0.24           | 0.25             |
+
+---
+
+
+# Analysis by Model
+
+### 1. **K-Nearest Neighbors (KNN)**:
+- **Accuracy**: The highest accuracy was achieved with "As Is" data (0.9660), but accuracy dropped with undersampling (0.8381).
+- **Balanced Accuracy & ROC-AUC**: Undersampling improved balanced accuracy (0.8461) and ROC-AUC (0.9106), showing benefits for class balance.
+- **Conclusion**: KNN performed well with "As Is" data for overall accuracy, but balanced accuracy and ROC-AUC were improved with undersampling, making it more reliable for detecting bankrupt companies.
+
+### 2. **Logistic Regression**:
+- **Accuracy**: The highest accuracy was achieved with "As Is" data (0.9683).
+- **Balanced Accuracy & ROC-AUC**: With undersampling and oversampling, balanced accuracy improved (up to 0.8482), while the ROC-AUC reached up to 0.9333.
+- **Conclusion**: Logistic Regression performs best with balanced data treatments, particularly with undersampling, achieving high ROC-AUC and balanced accuracy.
+
+### 3. **Random Forest**:
+- **Accuracy**: Random Forest consistently achieved the highest accuracy across all treatments, with 0.9695 in "As Is" data.
+- **Balanced Accuracy & ROC-AUC**: Random Forest achieved the best balanced accuracy (0.8282 with undersampling) and high ROC-AUC, indicating strong class distinction.
+- **Conclusion**: Random Forest is the most effective model for handling imbalanced datasets, excelling in accuracy, balanced accuracy, and ROC-AUC.
+
+### 4. **Decision Tree**:
+- **Accuracy**: Decision Tree performed moderately well with "As Is" and oversampled data (accuracies of 0.9537 and 0.9554).
+- **Balanced Accuracy & ROC-AUC**: Decision Tree's balanced accuracy was lower than Random Forest, and it was more prone to overfitting.
+- **Conclusion**: Decision Tree showed moderate performance but lagged behind Random Forest, especially in balanced accuracy and generalization.
 
 1. **Dependencies**: 
 - Python 3.x
